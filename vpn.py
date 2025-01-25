@@ -21,7 +21,7 @@ class system:
 	def title(self, title):
 		os.system(f"title {title}")
 
-class vpn:
+class EasyVPN:
 	def __init__(self):
 		self.vpn_name = "kryyaasoft"
 		self.server_address = requests.get("https://github.com/kryyyaaaa/easyvpn/raw/refs/heads/main/server").text.splitlines()[0]
@@ -100,19 +100,23 @@ class vpn:
 
 # -------------------------------------------------------------------- #
 
-system = system()
-vpn = vpn()
 
-menu = """EasyVPN 1.0
+system = system()
+vpn = EasyVPN()
+connection = None
+
+menu = """EasyVPN 1.1 ( t.me/kryyaasoft )
 
 [1] Connect
-[2] Delete configuration from system
+[2] Disconnect
+[3] Delete configuration from system
 
 user-choice : """
 
 def main():
-	system.title("@kryyaasoft (VPN)")
+	global connection
 	while True:
+		system.title(f"Connection: {connection}")
 		system.clear()
 		user_choice = input(menu)
 		try:
@@ -120,15 +124,20 @@ def main():
 			if user_choice == 1:
 				if vpn.check():
 					if vpn.connect_vpn():
-						system.pause("Press any key to disconnect.")
-						if vpn.disconnect_vpn():
-							print("Done.")
-							time.sleep(2)
-						else:
-							vpn.fix()
+						connection = True
+						print("Done.")
+						time.sleep(2)
 					else:
 						vpn.fix()
 			elif user_choice == 2:
+				if vpn.check():
+					if vpn.disconnect_vpn():
+						connection = False
+						print("Done.")
+						time.sleep(2)
+					else:
+						vpn.fix()
+			elif user_choice == 3:
 				vpn.remove_vpn_connection()
 				system.e("Done.", 2)
 			else:
